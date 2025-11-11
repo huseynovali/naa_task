@@ -1,5 +1,11 @@
+import MainLayout from "../layout/MainLayout";
+
 function AdminPanel() {
-  return <div>AdminPanel</div>;
+  return (
+    <div>
+      <MainLayout />
+    </div>
+  );
 }
 
 export default AdminPanel;
