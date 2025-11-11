@@ -4,7 +4,7 @@ axios.defaults.baseURL = import.meta.env.VITE_REACT_APP_BACKEND_URL;
 
 axios.interceptors.request.use(
   (config) => {
-    const token = localStorage.getItem("token");
+    const token = "";
     if (!token) {
       window.location.href = "/auth/login";
     }

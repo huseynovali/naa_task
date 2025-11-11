@@ -13,7 +13,7 @@ interface AccardionMenuProps {
 
 function AccardionMenu({ menus }: AccardionMenuProps) {
   const location = useLocation();
-  const [openMenus, setOpenMenus] = useState<string[]>([]);
+  const [openMenu, setOpenMenu] = useState<string | null>(null);
 
 
   const isLinkActive = (path: string) => location.pathname === path;
@@ -22,26 +22,23 @@ function AccardionMenu({ menus }: AccardionMenuProps) {
     return menuItem.links.some((link) => location.pathname === link.path);
   };
 
- 
+
   useEffect(() => {
-    menus.forEach((menuItem) => {
-      if (isMenuActive(menuItem) && !openMenus.includes(menuItem.title)) {
-        setOpenMenus((prev) => [...prev, menuItem.title]);
-      }
-    });
+    const activeMenu = menus.find((menuItem) => isMenuActive(menuItem));
+    if (activeMenu) {
+      setOpenMenu(activeMenu.title);
+    }
   }, [location.pathname]);
 
-  const toggleMenu = (menu: string) => {
-    setOpenMenus((prev) =>
-      prev.includes(menu) ? prev.filter((m) => m !== menu) : [...prev, menu]
-    );
+  const toggleMenu = (menuTitle: string) => {
+    setOpenMenu((prev) => (prev === menuTitle ? null : menuTitle));
   };
 
   return (
     <div>
       {menus?.map((menuItem) => {
         const menuActive = isMenuActive(menuItem);
-        const menuOpen = openMenus.includes(menuItem.title);
+        const menuOpen = openMenu === menuItem.title;
 
         return (
           <div key={menuItem.title} className="mb-2">
@@ -60,23 +57,25 @@ function AccardionMenu({ menus }: AccardionMenuProps) {
                     {menuItem.title}
                   </span>
                 </div>
-                <div className={menuOpen ? "" : "rotate-180"}>
-                  <svg
-                    width="16"
-                    height="16"
-                    viewBox="0 0 16 16"
-                    fill="none"
-                    xmlns="http://www.w3.org/2000/svg"
-                  >
-                    <path
-                      d="M13.28 10.5333C13.1533 10.5333 13.0267 10.4867 12.9267 10.3867L8.58001 6.04C8.26001 5.72 7.74001 5.72 7.42001 6.04L3.07335 10.3867C2.88001 10.58 2.56001 10.58 2.36668 10.3867C2.17335 10.1933 2.17335 9.87333 2.36668 9.68L6.71335 5.33333C7.42001 4.62666 8.57335 4.62666 9.28668 5.33333L13.6333 9.68C13.8267 9.87333 13.8267 10.1933 13.6333 10.3867C13.5333 10.48 13.4067 10.5333 13.28 10.5333Z"
-                      fill="currentColor"
-                    />
-                  </svg>
-                </div>
+                {menuItem.links.length > 0 && (
+                  <div className={menuOpen ? "" : "rotate-180"}>
+                    <svg
+                      width="16"
+                      height="16"
+                      viewBox="0 0 16 16"
+                      fill="none"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <path
+                        d="M13.28 10.5333C13.1533 10.5333 13.0267 10.4867 12.9267 10.3867L8.58001 6.04C8.26001 5.72 7.74001 5.72 7.42001 6.04L3.07335 10.3867C2.88001 10.58 2.56001 10.58 2.36668 10.3867C2.17335 10.1933 2.17335 9.87333 2.36668 9.68L6.71335 5.33333C7.42001 4.62666 8.57335 4.62666 9.28668 5.33333L13.6333 9.68C13.8267 9.87333 13.8267 10.1933 13.6333 10.3867C13.5333 10.48 13.4067 10.5333 13.28 10.5333Z"
+                        fill="currentColor"
+                      />
+                    </svg>
+                  </div>
+                )}
               </div>
             </button>
-            {menuOpen && (
+            {menuOpen && menuItem.links.length > 0 && (
               <div className="p-5 mt-2 space-y-1 bg-white rounded-xl border border-[#F7F7F7]">
                 {menuItem.links.map((link) => (
                   <Link
