@@ -6,7 +6,7 @@ function MainLayout() {
   return (
     <div className="flex">
       <Sidebar />
-      <div className="flex-1 bg-[#FEFEFE]">
+      <div className="flex-1 bg-[#FEFEFE] p-6">
         <Outlet />
       </div>
     </div>
