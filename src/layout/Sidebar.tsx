@@ -126,6 +126,7 @@ function Sidebar() {
           </defs>
         </svg>
       ),
+      links: [],
     },
   ];
   return (
@@ -136,7 +137,7 @@ function Sidebar() {
           NAA Control Panel
         </span>
       </div>
-      <div className="line w-full h-[1px] bg-[#F3F3F3] my-2"></div>
+      <div className="line w-full h-px bg-[#F3F3F3] my-2"></div>
       <div className="py-6 px-5 overflow-y-auto h-[calc(100vh-96px)]">
         <AccardionMenu menus={menus} />
         <SidebarBottom />

@@ -1,9 +1,9 @@
 export interface Step1FormData {
   title: string;
   slug: string;
-  category: "news" | "announcement";
+  type: "news" | "announcement";
   coverImage: FileList | null;
-  content: string;
+  description: string;
 }
 
 export type FormData = Step1FormData;

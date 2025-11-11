@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import AddPost from "./Post/AddPost";
 import PostList from "./Post/PostList";
 
@@ -7,8 +7,8 @@ import PostList from "./Post/PostList";
 function Post() {
   const [isPostDropdownOpen, setIsPostDropdownOpen] = useState(false);
   const [isStatusDropdownOpen, setIsStatusDropdownOpen] = useState(false);
-  const [selectedPost, setSelectedPost] = useState("All Posts");
-  const [selectedStatus, setSelectedStatus] = useState("All Status");
+  const [selectedPost, setSelectedPost] = useState("allposts");
+  const [selectedStatus, setSelectedStatus] = useState("allstatus");
 
 
 
@@ -35,7 +35,7 @@ function Post() {
               className="flex items-center gap-2 px-4 py-2 border border-[#E0E0E0] rounded-lg hover:bg-gray-50 min-w-[150px] justify-between"
             >
               <span className="text-sm font-lato font-medium ">
-                {selectedPost}
+                {selectedPost.toLocaleUpperCase()}
               </span>
               <svg
                 width="16"
@@ -57,7 +57,7 @@ function Post() {
               <div className="absolute top-full left-0 mt-2 bg-white border border-[#E0E0E0] rounded-lg shadow-lg z-10 min-w-[150px]">
                 <button
                   onClick={() => {
-                    setSelectedPost("All Posts");
+                    setSelectedPost("allposts");
                     setIsPostDropdownOpen(false);
                   }}
                   className="w-full text-left px-4 py-2 hover:bg-gray-50 text-sm"
@@ -66,7 +66,7 @@ function Post() {
                 </button>
                 <button
                   onClick={() => {
-                    setSelectedPost("News");
+                    setSelectedPost("news");
                     setIsPostDropdownOpen(false);
                   }}
                   className="w-full text-left px-4 py-2 hover:bg-gray-50 text-sm"
@@ -75,7 +75,7 @@ function Post() {
                 </button>
                 <button
                   onClick={() => {
-                    setSelectedPost("Announcement");
+                    setSelectedPost("announcement");
                     setIsPostDropdownOpen(false);
                   }}
                   className="w-full text-left px-4 py-2 hover:bg-gray-50 text-sm"
@@ -92,7 +92,7 @@ function Post() {
               className="flex items-center gap-2 px-4 py-2 border border-[#E0E0E0] rounded-lg hover:bg-gray-50 min-w-[150px] justify-between"
             >
               <span className="text-sm font-lato font-medium ">
-                {selectedStatus}
+                {selectedStatus.toLocaleUpperCase()}
               </span>
               <svg
                 width="16"
@@ -114,7 +114,7 @@ function Post() {
               <div className="absolute top-full left-0 mt-2 bg-white border border-[#E0E0E0] rounded-lg shadow-lg z-10 min-w-[150px]">
                 <button
                   onClick={() => {
-                    setSelectedStatus("All Status");
+                    setSelectedStatus("allstatus");
                     setIsStatusDropdownOpen(false);
                   }}
                   className="w-full text-left px-4 py-2 hover:bg-gray-50 text-sm"
@@ -123,7 +123,7 @@ function Post() {
                 </button>
                 <button
                   onClick={() => {
-                    setSelectedStatus("Active");
+                    setSelectedStatus("active");
                     setIsStatusDropdownOpen(false);
                   }}
                   className="w-full text-left px-4 py-2 hover:bg-gray-50 text-sm flex items-center gap-2"
@@ -133,7 +133,7 @@ function Post() {
                 </button>
                 <button
                   onClick={() => {
-                    setSelectedStatus("Inactive");
+                    setSelectedStatus("inactive");
                     setIsStatusDropdownOpen(false);
                   }}
                   className="w-full text-left px-4 py-2 hover:bg-gray-50 text-sm flex items-center gap-2"
@@ -173,7 +173,7 @@ function Post() {
       </div>
 
 
-      <PostList />
+      <PostList postType={selectedPost} postStatus={selectedStatus} />
     </div>
   );
 }

@@ -4,13 +4,9 @@ import ReactQuill from "react-quill-new";
 import "react-quill-new/dist/quill.snow.css";
 import type { AddFormProps, FormData } from "../../../types/Post";
 
-function AddForm({ onSubmit, initialData, existingCoverImage }: AddFormProps) {
+function AddForm({ onSubmit, initialData }: AddFormProps) {
   const [previewImages, setPreviewImages] = useState<string[]>([]);
   const [selectedFileName, setSelectedFileName] = useState<string>("");
-
-  const [coverImagePreview, setCoverImagePreview] = useState<string | null>(
-    existingCoverImage || null
-  );
 
   const {
     register,
@@ -21,8 +17,8 @@ function AddForm({ onSubmit, initialData, existingCoverImage }: AddFormProps) {
     setValue,
   } = useForm<FormData>({
     defaultValues: initialData || {
-      category: "news",
-      content: "",
+      type: "news",
+      description: "",
     },
   });
 
@@ -30,12 +26,12 @@ function AddForm({ onSubmit, initialData, existingCoverImage }: AddFormProps) {
     if (initialData) {
       setValue("title", initialData.title);
       setValue("slug", initialData.slug);
-      setValue("category", initialData.category);
-      setValue("content", initialData.content);
+      setValue("type", initialData.type);
+      setValue("description", initialData.description);
     }
   }, [initialData, setValue]);
 
-  const selectedCategory = watch("category");
+  const selectedType = watch("type");
 
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = e.target.files;
@@ -129,13 +125,13 @@ function AddForm({ onSubmit, initialData, existingCoverImage }: AddFormProps) {
         <div className="flex gap-3">
           <label
             className={`flex items-center gap-2 px-4 py-2 border rounded-full cursor-pointer ${
-              selectedCategory === "news"
+              selectedType === "news"
                 ? "border-[#1447E6] bg-[#EBF0FF] text-[#1447E6]"
                 : "border-[#E0E0E0] text-[#787486]"
             }`}
           >
             <input
-              {...register("category")}
+              {...register("type")}
               type="radio"
               value="news"
               className="hidden"
@@ -149,7 +145,7 @@ function AddForm({ onSubmit, initialData, existingCoverImage }: AddFormProps) {
             >
               <path
                 d="M14.1666 14.1667H2.49992C2.05789 14.1667 1.63397 13.9911 1.32141 13.6785C1.00885 13.366 0.833252 12.942 0.833252 12.5V2.50001C0.833252 2.05798 1.00885 1.63406 1.32141 1.3215C1.63397 1.00894 2.05789 0.833344 2.49992 0.833344H10.8333C11.2753 0.833344 11.6992 1.00894 12.0118 1.3215C12.3243 1.63406 12.4999 2.05798 12.4999 2.50001V3.33334M14.1666 14.1667C13.7246 14.1667 13.3006 13.9911 12.9881 13.6785C12.6755 13.366 12.4999 12.942 12.4999 12.5V3.33334M14.1666 14.1667C14.6086 14.1667 15.0325 13.9911 15.3451 13.6785C15.6577 13.366 15.8333 12.942 15.8333 12.5V5.00001C15.8333 4.55798 15.6577 4.13406 15.3451 3.8215C15.0325 3.50894 14.6086 3.33334 14.1666 3.33334H12.4999M9.16659 0.833344H5.83325M4.16659 10.8333H9.16659M4.16659 4.16668H9.16659V7.50001H4.16659V4.16668Z"
-                stroke={selectedCategory === "news" ? "#1447E6" : "#787486"}
+                stroke={selectedType === "news" ? "#1447E6" : "#787486"}
                 strokeWidth="1.66667"
                 strokeLinecap="round"
                 strokeLinejoin="round"
@@ -160,13 +156,13 @@ function AddForm({ onSubmit, initialData, existingCoverImage }: AddFormProps) {
 
           <label
             className={`flex items-center gap-2 px-4 py-2 border rounded-full cursor-pointer ${
-              selectedCategory === "announcement"
+              selectedType === "announcement"
                 ? "border-[#1447E6] bg-[#EBF0FF] text-[#1447E6]"
                 : "border-[#E0E0E0] text-[#787486]"
             }`}
           >
             <input
-              {...register("category")}
+              {...register("type")}
               type="radio"
               value="announcement"
               className="hidden"
@@ -180,9 +176,7 @@ function AddForm({ onSubmit, initialData, existingCoverImage }: AddFormProps) {
             >
               <path
                 d="M7.49948 3.23504V14.3667C7.49924 14.7121 7.37711 15.0463 7.15461 15.3105C6.9321 15.5747 6.62351 15.7518 6.28319 15.8108C5.94287 15.8698 5.59266 15.8067 5.29426 15.6328C4.99585 15.4589 4.76841 15.1852 4.65198 14.86L2.86282 9.73504M2.86282 9.73504C2.1555 9.4343 1.57381 8.89926 1.21618 8.21893C0.858547 7.5386 0.746948 6.75561 0.900264 6.00246C1.05358 5.2493 1.4624 4.57225 2.05753 4.08587C2.65266 3.5995 3.39755 3.33367 4.16615 3.33337H5.69282C9.10948 3.33337 12.047 2.30504 13.3328 0.833374V12.5C12.047 11.0284 9.11032 10 5.69282 10H4.16615C3.71835 10.0007 3.27503 9.91001 2.86282 9.73504ZM13.3328 9.16671C13.9959 9.16671 14.6317 8.90332 15.1006 8.43447C15.5694 7.96563 15.8328 7.32975 15.8328 6.66671C15.8328 6.00367 15.5694 5.36778 15.1006 4.89894C14.6317 4.4301 13.9959 4.16671 13.3328 4.16671"
-                stroke={
-                  selectedCategory === "announcement" ? "#1447E6" : "#787486"
-                }
+                stroke={selectedType === "announcement" ? "#1447E6" : "#787486"}
                 strokeWidth="1.66667"
                 strokeLinecap="round"
                 strokeLinejoin="round"
@@ -240,7 +234,7 @@ function AddForm({ onSubmit, initialData, existingCoverImage }: AddFormProps) {
             <img
               src={previewImages[0]}
               alt="Cover preview"
-              className="w-[128px] h-[92px] object-cover rounded-lg border border-[#E0E0E0]"
+              className="w-32 h-[92px] object-cover rounded-lg border border-[#E0E0E0]"
             />
             <button
               type="button"
@@ -292,7 +286,7 @@ function AddForm({ onSubmit, initialData, existingCoverImage }: AddFormProps) {
           and more.
         </p>
         <Controller
-          name="content"
+          name="description"
           control={control}
           rules={{ required: "Content is required" }}
           render={({ field }) => (
@@ -308,9 +302,9 @@ function AddForm({ onSubmit, initialData, existingCoverImage }: AddFormProps) {
             />
           )}
         />
-        {errors.content && (
+        {errors.description && (
           <span className="text-red-500 text-xs mt-1 block">
-            {errors.content.message}
+            {errors.description.message}
           </span>
         )}
       </div>

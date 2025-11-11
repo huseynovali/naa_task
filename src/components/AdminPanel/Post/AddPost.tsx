@@ -40,9 +40,9 @@ function AddPost({
         step1: {
           title: post.title || "",
           slug: post.slug || "",
-          category: post.type || "news",
+          type: post.type || "news",
           coverImage: null,
-          content: post.description || "",
+          description: post.description || "",
         },
         step2: null,
         language: post.language || "az",
@@ -88,8 +88,8 @@ function AddPost({
       if (completeData.step1) {
         formDataToSend.append("title", completeData.step1.title);
         formDataToSend.append("slug", completeData.step1.slug);
-        formDataToSend.append("category", completeData.step1.category);
-        formDataToSend.append("content", completeData.step1.content);
+        formDataToSend.append("type", completeData.step1.type);
+        formDataToSend.append("description", completeData.step1.description);
 
         if (
           completeData.step1.coverImage &&

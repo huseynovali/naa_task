@@ -1,21 +1,19 @@
 import { useState } from "react";
-import { useQuery} from "@tanstack/react-query";
+import { useQuery } from "@tanstack/react-query";
 import Pagination from "../../Pagination";
 import PostService from "../../../service/postService";
 import EditPost from "./EditPost";
 import DeletePost from "./DeletePost";
 import type { Post } from "../../../types/Post";
 
-
-function PostList() {
+function PostList({postType, postStatus}: {postType?: string; postStatus?: string}) {
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage, setItemsPerPage] = useState(10);
   const [openDropdownId, setOpenDropdownId] = useState<number | null>(null);
 
-
   const { data, isLoading, isError } = useQuery({
-    queryKey: ["posts", currentPage, itemsPerPage],
-    queryFn: () => PostService.getPosts(currentPage, itemsPerPage),
+    queryKey: ["posts", currentPage, itemsPerPage, postType, postStatus],
+    queryFn: () => PostService.getPosts(currentPage, itemsPerPage, postType, postStatus),
   });
 
   const posts: Post[] = data?.posts || [];
@@ -90,15 +88,15 @@ function PostList() {
           <tbody>
             {posts.map((post) => (
               <tr key={post.id} className="border-t border-[#F7F7F7]">
-                <td className="px-6 py-4">
+                <td className="px-6 py-4 min-w-[332px]">
                   <div className="flex items-center gap-3">
                     <img
                       src={post.coverImage}
                       alt={post.title}
-                      className="w-[128px] h-[96px] object-cover rounded-lg"
+                      className="w-32 h-24 object-cover rounded-lg shrink-0"
                     />
                     <div>
-                      <h3 className="font-medium text-[16px] text-[#2A2A2A] mb-1">
+                      <h3 className="font-semibold font-inter break-all text-[16px] text-[#2A2A2A] mb-1">
                         {post.title.length > 40
                           ? post.title.substring(0, 40) + "..."
                           : post.title}
@@ -123,7 +121,7 @@ function PostList() {
                   </span>
                 </td>
                 <td className="px-6 py-4 text-center">
-                  <div className="text-[16px] text-[#000] font-medium">
+                  <div className="text-[16px] text-black font-medium">
                     {post.sharingDate}
                   </div>
                   <div className="text-sm text-[#aaa] mt-1">
