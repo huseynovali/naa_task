@@ -9,9 +9,9 @@ function DeletePost({ post }: { post: Post }) {
   const queryClient = useQueryClient();
 
   const mutation = useMutation({
-    mutationFn: () => PostService.deletePost(post.id),
+    mutationFn: async () => await PostService.deletePost(post.id),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["posts"] });
+      queryClient.refetchQueries({ queryKey: ["posts"] });
       setSuccess(true);
       setConfirmOpen(false);
     },
@@ -191,7 +191,6 @@ function DeletePost({ post }: { post: Post }) {
             <button
               onClick={() => {
                 setSuccess(false);
-                window.location.reload();
               }}
               className="mt-4 px-6 py-2 bg-[#243C7B] text-white rounded-lg hover:bg-[#1a2d5a]"
             >

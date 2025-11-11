@@ -18,7 +18,6 @@ function AddFormImages({ setStep, onSubmit }: AddFormImagesProps) {
   const {
     register,
     handleSubmit,
-    formState: { errors },
   } = useForm<GalleryFormData>();
 
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {

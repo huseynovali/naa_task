@@ -3,7 +3,7 @@ import aze_flag from "../../../assets/aze.png";
 import uk_flag from "../../../assets/uk.png";
 import AddForm from "./AddForm";
 import AddFormImages from "./AddFormImages";
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import SuccesModal from "./SuccesModal";
 import PostService from "../../../service/postService";
 import type {
@@ -31,6 +31,7 @@ function AddPost({
     step2: null,
     language: "az",
   });
+  const queryClient = useQueryClient();
 
   useEffect(() => {
     if (isEditing && post) {
@@ -53,11 +54,12 @@ function AddPost({
   const mutation = useMutation({
     mutationFn: async (data: FormData) => {
       if (isEditing && post?.id) {
-        return PostService.updatePost(post.id, data);
+        return await PostService.updatePost(post.id, data);
       }
-      return PostService.createPost(data);
+      return await PostService.createPost(data);
     },
     onSuccess: () => {
+      queryClient.refetchQueries({ queryKey: ["posts"] });
       setSuccess(true);
     },
     onError: (error) => {
