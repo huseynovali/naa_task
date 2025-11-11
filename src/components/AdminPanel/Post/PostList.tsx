@@ -1,37 +1,24 @@
 import { useState } from "react";
-import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import { useQuery} from "@tanstack/react-query";
 import Pagination from "../../Pagination";
 import PostService from "../../../service/postService";
 import EditPost from "./EditPost";
 import DeletePost from "./DeletePost";
+import type { Post } from "../../../types/Post";
+
 
 function PostList() {
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage, setItemsPerPage] = useState(10);
   const [openDropdownId, setOpenDropdownId] = useState<number | null>(null);
 
-  const queryClient = useQueryClient();
 
   const { data, isLoading, isError } = useQuery({
     queryKey: ["posts", currentPage, itemsPerPage],
     queryFn: () => PostService.getPosts(currentPage, itemsPerPage),
   });
 
-  const updatePublishStatusMutation = useMutation({
-    mutationFn: ({
-      postId,
-      status,
-    }: {
-      postId: number;
-      status: "publish" | "draft";
-    }) => PostService.updatePublishStatus(postId, status),
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["posts"] });
-      setOpenDropdownId(null);
-    },
-  });
-
-  const posts = data?.posts || [];
+  const posts: Post[] = data?.posts || [];
   const paginationData = data?.pagination || {
     currentPage: 1,
     totalPages: 1,
@@ -46,13 +33,6 @@ function PostList() {
   const handleItemsPerPageChange = (items: number) => {
     setItemsPerPage(items);
     setCurrentPage(1);
-  };
-
-  const handlePublishStatusChange = (
-    postId: number,
-    status: "publish" | "draft"
-  ) => {
-    updatePublishStatusMutation.mutate({ postId, status });
   };
 
   const toggleDropdown = (postId: number) => {
@@ -113,7 +93,7 @@ function PostList() {
                 <td className="px-6 py-4">
                   <div className="flex items-center gap-3">
                     <img
-                      src={post.image}
+                      src={post.coverImage}
                       alt={post.title}
                       className="w-[128px] h-[96px] object-cover rounded-lg"
                     />
@@ -172,7 +152,6 @@ function PostList() {
                   <div className="relative">
                     <button
                       onClick={() => toggleDropdown(post.id)}
-                      disabled={updatePublishStatusMutation.isPending}
                       className="flex items-center gap-2 px-3 py-1 border border-[#E0E0E0] rounded-lg hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
                     >
                       <span
@@ -204,21 +183,11 @@ function PostList() {
 
                     {openDropdownId === post.id && (
                       <div className="absolute top-full left-0 mt-2 bg-white border border-[#E0E0E0] rounded-lg shadow-lg z-10 min-w-[140px]">
-                        <button
-                          onClick={() =>
-                            handlePublishStatusChange(post.id, "publish")
-                          }
-                          className="w-full text-left px-4 py-2 hover:bg-gray-50 text-sm flex items-center gap-2"
-                        >
+                        <button className="w-full text-left px-4 py-2 hover:bg-gray-50 text-sm flex items-center gap-2">
                           <span className="w-2 h-2 bg-green-500 rounded-full"></span>
                           Publish
                         </button>
-                        <button
-                          onClick={() =>
-                            handlePublishStatusChange(post.id, "draft")
-                          }
-                          className="w-full text-left px-4 py-2 hover:bg-gray-50 text-sm flex items-center gap-2"
-                        >
+                        <button className="w-full text-left px-4 py-2 hover:bg-gray-50 text-sm flex items-center gap-2">
                           <span className="w-2 h-2 bg-yellow-500 rounded-full"></span>
                           Draft
                         </button>
@@ -231,8 +200,8 @@ function PostList() {
                 </td>
                 <td className="px-6 py-4">
                   <div className="flex items-center gap-2">
-                   <EditPost post={post} />
-                   <DeletePost postId={post.id} />
+                    <EditPost post={post} />
+                    <DeletePost post={post} />
                   </div>
                 </td>
               </tr>

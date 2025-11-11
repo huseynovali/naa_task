@@ -2,34 +2,9 @@ import React, { useState, useEffect } from "react";
 import { useForm, Controller } from "react-hook-form";
 import ReactQuill from "react-quill-new";
 import "react-quill-new/dist/quill.snow.css";
+import type { AddFormProps, FormData } from "../../../types/Post";
 
-interface FormData {
-  title: string;
-  slug: string;
-  category: "news" | "announcement";
-  coverImage: FileList | null;
-  content: string;
-}
-
-interface AddFormProps {
-  step: number;
-  setStep: (step: number) => void;
-  setIsOpen: (isOpen: boolean) => void;
-  onSubmit: (data: FormData) => void;
-  initialData?: FormData | null;
-  isEditing?: boolean;
-  existingCoverImage?: string;
-}
-
-function AddForm({
-  step,
-  setStep,
-  setIsOpen,
-  onSubmit,
-  initialData,
-  isEditing,
-  existingCoverImage,
-}: AddFormProps) {
+function AddForm({ onSubmit, initialData, existingCoverImage }: AddFormProps) {
   const [previewImages, setPreviewImages] = useState<string[]>([]);
   const [selectedFileName, setSelectedFileName] = useState<string>("");
 
@@ -80,8 +55,6 @@ function AddForm({
   const handleFormSubmit = (data: FormData) => {
     onSubmit(data);
   };
-
-  
 
   const modules = {
     toolbar: [

@@ -6,31 +6,19 @@ import AddFormImages from "./AddFormImages";
 import { useMutation } from "@tanstack/react-query";
 import SuccesModal from "./SuccesModal";
 import PostService from "../../../service/postService";
-
-interface FormData {
-  title: string;
-  slug: string;
-  category: "news" | "announcement";
-  coverImage: FileList | null;
-  content: string;
-}
-
-interface GalleryFormData {
-  images: FileList | null;
-}
-
-interface CompleteFormData {
-  step1: FormData | null;
-  step2: GalleryFormData | null;
-  language: "az" | "en";
-}
+import type {
+  CompleteFormData,
+  GalleryFormData,
+  Post,
+  Step1FormData,
+} from "../../../types/Post";
 
 function AddPost({
   post,
   isEditing,
   setIsEditing,
 }: {
-  post?: any;
+  post?: Post;
   isEditing?: boolean;
   setIsEditing?: (val: boolean) => void;
 }) {
@@ -44,7 +32,6 @@ function AddPost({
     language: "az",
   });
 
- 
   useEffect(() => {
     if (isEditing && post) {
       setIsOpen(true);
@@ -78,7 +65,7 @@ function AddPost({
     },
   });
 
-  const handleStep1Submit = (data: FormData) => {
+  const handleStep1Submit = (data: Step1FormData) => {
     setFormData((prev) => ({
       ...prev,
       step1: data,
@@ -249,7 +236,6 @@ function AddPost({
               ></div>
             </div>
 
-      
             {mutation.isPending && (
               <div className="absolute inset-0 bg-white/90 flex items-center justify-center z-10 rounded-lg">
                 <div className="flex flex-col items-center gap-3">
@@ -277,8 +263,6 @@ function AddPost({
                 setStep={setStep}
                 setIsOpen={setIsOpen}
                 onSubmit={handleStep2Submit}
-                isEditing={isEditing}
-                existingGalleryImages={post?.galleryImages}
               />
             )}
           </div>

@@ -1,19 +1,9 @@
 import { useState } from "react";
 import AddPost from "./AddPost";
+import type { Post } from "../../../types/Post";
 
 interface EditPostProps {
-  post: {
-    id: number;
-    image: string;
-    title: string;
-    description: string;
-    type: "news" | "announcement";
-    sharingDate: string;
-    sharingTime: string;
-    status: "active" | "inactive";
-    publishStatus: "publish" | "draft";
-    author: string;
-  };
+  post: Post
 }
 
 function EditPost({ post }: EditPostProps) {

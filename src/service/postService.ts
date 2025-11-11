@@ -1,15 +1,4 @@
-interface PostData {
-  id: number;
-  image: string;
-  title: string;
-  description: string;
-  type: "news" | "announcement";
-  sharingDate: string;
-  sharingTime: string;
-  status: "active" | "inactive";
-  publishStatus: "publish" | "draft";
-  author: string;
-}
+import type { Post } from "../types/Post";
 
 interface PaginationData {
   currentPage: number;
@@ -19,7 +8,7 @@ interface PaginationData {
 }
 
 interface GetPostsResponse {
-  posts: PostData[];
+  posts: Post[];
   pagination: PaginationData;
 }
 
@@ -37,14 +26,14 @@ const PostService = {
     page: number,
     itemsPerPage: number
   ): Promise<GetPostsResponse> => {
-
     await new Promise((resolve) => setTimeout(resolve, 1000));
 
-
-    const allPosts: PostData[] = Array.from({ length: 100 }, (_, i) => ({
+    const allPosts: Post[] = Array.from({ length: 100 }, (_, i) => ({
       id: i + 1,
-      image: "https://via.placeholder.com/120x80",
-      title: `Milli Aviasiya Akademiyasının təşkilatçılığı ilə həyata keçirilən “Aviatikada Qadınlar Günü” mövzusunda tədbir keçirilib ${i + 1}`,
+      coverImage: "https://via.placeholder.com/120x80",
+      title: `Milli Aviasiya Akademiyasının təşkilatçılığı ilə həyata keçirilən “Aviatikada Qadınlar Günü” mövzusunda tədbir keçirilib ${
+        i + 1
+      }`,
       description:
         "Milli Aviasiya Akademiyasının təşkilatçılığı ilə həyata keçirilən “Aviatikada Qadınlar Günü” mövzusunda tədbir keçirilib",
       type: i % 2 === 0 ? "news" : "announcement",
@@ -54,6 +43,7 @@ const PostService = {
       publishStatus: i % 4 === 0 ? "draft" : "publish",
       author: "snovruzlu",
       slug: "https://naa.edu.az/",
+      language: "az",
     }));
 
     const totalItems = allPosts.length;
@@ -86,7 +76,7 @@ const PostService = {
       success: true,
       message: "Post deleted successfully",
     };
-  }
+  },
 };
 
 export default PostService;

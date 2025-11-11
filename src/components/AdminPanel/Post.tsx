@@ -2,17 +2,7 @@ import React, { useState } from "react";
 import AddPost from "./Post/AddPost";
 import PostList from "./Post/PostList";
 
-interface PostData {
-  id: number;
-  image: string;
-  title: string;
-  description: string;
-  type: "news" | "announcement";
-  sharingTime: string;
-  status: "active" | "inactive";
-  publishStatus: "publish" | "draft";
-  author: string;
-}
+
 
 function Post() {
   const [isPostDropdownOpen, setIsPostDropdownOpen] = useState(false);
