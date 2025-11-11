@@ -17,7 +17,6 @@ function Pagination({
 }: PaginationProps) {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
 
-  // Generate page numbers
   const getPageNumbers = () => {
     const pages: (number | string)[] = [];
     const maxVisiblePages = 7;

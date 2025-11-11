@@ -16,7 +16,9 @@ interface AddFormProps {
   setStep: (step: number) => void;
   setIsOpen: (isOpen: boolean) => void;
   onSubmit: (data: FormData) => void;
-  initialData: FormData | null;
+  initialData?: FormData | null;
+  isEditing?: boolean;
+  existingCoverImage?: string;
 }
 
 function AddForm({
@@ -25,9 +27,15 @@ function AddForm({
   setIsOpen,
   onSubmit,
   initialData,
+  isEditing,
+  existingCoverImage,
 }: AddFormProps) {
   const [previewImages, setPreviewImages] = useState<string[]>([]);
   const [selectedFileName, setSelectedFileName] = useState<string>("");
+
+  const [coverImagePreview, setCoverImagePreview] = useState<string | null>(
+    existingCoverImage || null
+  );
 
   const {
     register,
@@ -43,7 +51,6 @@ function AddForm({
     },
   });
 
-  // Load initial data if exists
   useEffect(() => {
     if (initialData) {
       setValue("title", initialData.title);
@@ -74,7 +81,8 @@ function AddForm({
     onSubmit(data);
   };
 
-  // Quill modules configuration
+  
+
   const modules = {
     toolbar: [
       [{ header: [1, 2, 3, false] }],

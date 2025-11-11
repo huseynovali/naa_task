@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import aze_flag from "../../../assets/aze.png";
 import uk_flag from "../../../assets/uk.png";
 import AddForm from "./AddForm";
@@ -25,7 +25,15 @@ interface CompleteFormData {
   language: "az" | "en";
 }
 
-function AddPost() {
+function AddPost({
+  post,
+  isEditing,
+  setIsEditing,
+}: {
+  post?: any;
+  isEditing?: boolean;
+  setIsEditing?: (val: boolean) => void;
+}) {
   const [isOpen, setIsOpen] = useState(false);
   const [selectedLang, setSelectedLang] = useState<"az" | "en">("az");
   const [step, setStep] = useState(1);
@@ -36,8 +44,32 @@ function AddPost() {
     language: "az",
   });
 
+ 
+  useEffect(() => {
+    if (isEditing && post) {
+      setIsOpen(true);
+      setSelectedLang(post.language || "az");
+      setFormData({
+        step1: {
+          title: post.title || "",
+          slug: post.slug || "",
+          category: post.type || "news",
+          coverImage: null,
+          content: post.description || "",
+        },
+        step2: null,
+        language: post.language || "az",
+      });
+    }
+  }, [isEditing, post]);
+
   const mutation = useMutation({
-    mutationFn: async (data: FormData) => PostService.createPost(data),
+    mutationFn: async (data: FormData) => {
+      if (isEditing && post?.id) {
+        return PostService.updatePost(post.id, data);
+      }
+      return PostService.createPost(data);
+    },
     onSuccess: () => {
       setSuccess(true);
     },
@@ -99,6 +131,9 @@ function AddPost() {
     setStep(1);
     setFormData({ step1: null, step2: null, language: "az" });
     setSuccess(false);
+    if (setIsEditing) {
+      setIsEditing(false);
+    }
   };
 
   const handleSuccessClose = () => {
@@ -106,19 +141,24 @@ function AddPost() {
     setIsOpen(false);
     setStep(1);
     setFormData({ step1: null, step2: null, language: "az" });
+    if (setIsEditing) {
+      setIsEditing(false);
+    }
   };
 
   return (
     <div className="font-lato">
-      <button
-        onClick={() => setIsOpen(!isOpen)}
-        className="bg-[#243C7B] text-white px-4 py-2 flex items-center gap-2 rounded-[30px] text-sm font-lato font-medium "
-      >
-        <div className="p-2 rounded-full bg-[#3D5DB2] h-6 w-6 flex items-center justify-center">
-          +
-        </div>
-        Add News or Announcement
-      </button>
+      {!isEditing && (
+        <button
+          onClick={() => setIsOpen(!isOpen)}
+          className="bg-[#243C7B] text-white px-4 py-2 flex items-center gap-2 rounded-[30px] text-sm font-lato font-medium "
+        >
+          <div className="p-2 rounded-full bg-[#3D5DB2] h-6 w-6 flex items-center justify-center">
+            +
+          </div>
+          Add News or Announcement
+        </button>
+      )}
 
       {isOpen && !success && (
         <div className="fixed inset-0 bg-black/20 bg-opacity-50 flex items-center justify-center z-50">
@@ -191,7 +231,7 @@ function AddPost() {
 
             <div className="flex justify-between items-center mb-4">
               <h2 className="text-[28px] font-medium">
-                Create News / Announcement
+                {isEditing ? "Edit" : "Create"} News / Announcement
               </h2>
               <span className="text-[28px] font-medium">{step}/2</span>
             </div>
@@ -209,13 +249,13 @@ function AddPost() {
               ></div>
             </div>
 
-            {/* Loading Overlay */}
+      
             {mutation.isPending && (
               <div className="absolute inset-0 bg-white/90 flex items-center justify-center z-10 rounded-lg">
                 <div className="flex flex-col items-center gap-3">
                   <div className="w-12 h-12 border-4 border-[#243C7B] border-t-transparent rounded-full animate-spin"></div>
                   <p className="text-sm text-[#787486] font-medium">
-                    Submitting...
+                    {isEditing ? "Updating..." : "Submitting..."}
                   </p>
                 </div>
               </div>
@@ -228,6 +268,8 @@ function AddPost() {
                 setIsOpen={setIsOpen}
                 onSubmit={handleStep1Submit}
                 initialData={formData.step1}
+                isEditing={isEditing}
+                existingCoverImage={post?.coverImage}
               />
             ) : (
               <AddFormImages
@@ -235,13 +277,20 @@ function AddPost() {
                 setStep={setStep}
                 setIsOpen={setIsOpen}
                 onSubmit={handleStep2Submit}
+                isEditing={isEditing}
+                existingGalleryImages={post?.galleryImages}
               />
             )}
           </div>
         </div>
       )}
 
-      {success && <SuccesModal handleSuccessClose={handleSuccessClose} />}
+      {success && (
+        <SuccesModal
+          handleSuccessClose={handleSuccessClose}
+          isEditing={isEditing}
+        />
+      )}
     </div>
   );
 }

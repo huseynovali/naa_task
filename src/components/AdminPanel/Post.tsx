@@ -182,7 +182,7 @@ function Post() {
         </div>
       </div>
 
-      {/* Table */}
+
       <PostList />
     </div>
   );

@@ -1,4 +1,3 @@
-import React from "react";
 import user_img from "../assets/user_image.png";
 function SidebarBottom() {
   return (
